@@ -50,14 +50,19 @@ class MusicSpider(object):
         else:
             song_list_name = None
         # 设置音乐下载的文件夹为歌手名字或歌单名
-        if artist_name:
-            folder = './' + artist_name
-        else:
-            folder = './' + song_list_name
+
+        # if artist_name:
+        #     folder = './' + artist_name
+        # else:
+        #     folder = './' + song_list_name
+
+        # 上面的判断可以写成下面的形式
+        folder = './' + artist_name if artist_name else './' + song_list_name
+
         if not os.path.exists(folder):
             os.mkdir(folder)
 
-        for i,s in enumerate(song_list):
+        for i, s in enumerate(song_list):
             href = str(s.xpath('./@href')[0])
             id = href.split('=')[-1]
             src = out_link + id  # 拼接获取音乐真实的src资源值
@@ -65,7 +70,7 @@ class MusicSpider(object):
             filename = title + '.mp3'
             filepath = folder + '/' + filename
             data = requests.get(src).content  # 音乐的二进制数据
-            info = '开始下载第%d首音乐：%s\n' % (i+1, filename)
+            info = '开始下载第%d首音乐：%s\n' % (i + 1, filename)
 
             if flag:  # 当停止下载时，显示信息，跳出循环，代码不再向下执行
                 self.text.insert(tkinter.END, '停止下载')
@@ -144,7 +149,7 @@ class Application(object):
         btn_quit.pack(side='right', padx=100, pady=10)
 
     def stop(self):
-        global flag # 将flag设为全局变量，以便下载过程中能随时获取
+        global flag  # 将flag设为全局变量，以便下载过程中能随时获取
         flag = True
         return flag
 
