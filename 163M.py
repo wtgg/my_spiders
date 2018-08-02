@@ -16,7 +16,7 @@ class MusicSpider(object):
         self.text = text
         self.entry = entry
         url = self.entry.get()  # 获取输入框中的字符串
-        url = url.replace('/#', '').replace('https', 'http')  # 对字符串进行取空格和转协议处理
+        url = url.replace('/#', '').replace('https', 'http')  # 对字符串进行去空格和转协议处理
         # 当没有输入url就点击下载或者回车的时候，在文本框中显示提示
         if url == '':
             self.text.insert(tkinter.END, '请输入您要下载的歌单的url地址！')
@@ -37,26 +37,13 @@ class MusicSpider(object):
         song_list = tree.xpath('//ul[@class="f-hide"]/li/a')
         # 如果是歌手页面
         artist_name_tree = tree.xpath('//h2[@id="artist-name"]/text()')
+        artist_name = str(artist_name_tree[0]) if artist_name_tree else None
 
-        if artist_name_tree:
-            artist_name = str(artist_name_tree[0])
-        else:
-            artist_name = None
         # 如果是歌单页面：
         song_list_name_tree = tree.xpath('//h2[contains(@class,"f-ff2")]/text()')
+        song_list_name = str(song_list_name_tree[0]) if song_list_name_tree else None
 
-        if song_list_name_tree:
-            song_list_name = str(song_list_name_tree[0])
-        else:
-            song_list_name = None
         # 设置音乐下载的文件夹为歌手名字或歌单名
-
-        # if artist_name:
-        #     folder = './' + artist_name
-        # else:
-        #     folder = './' + song_list_name
-
-        # 上面的判断可以写成下面的形式
         folder = './' + artist_name if artist_name else './' + song_list_name
 
         if not os.path.exists(folder):
